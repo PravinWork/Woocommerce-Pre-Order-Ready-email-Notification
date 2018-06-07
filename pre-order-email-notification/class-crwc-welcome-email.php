@@ -37,7 +37,7 @@ class CRWC_Welcome_Email extends WC_Email {
 		
 		//DG_WPOEN_PLUGIN_DIR
 		//$this->template_base  = $upload_dir['basedir'] . '/crwc-custom-emails/';	// Fix the template base lookup for use on admin screen template path display
-		$this->template_base  = DG_WPOEN_PLUGIN_DIR . '/crwc-custom-emails/';
+		$this->template_base  = DG_WPOEN_PLUGIN_DIR ;
 		$this->template_html  = 'emails/crwc-welcome-email.php';
 		$this->template_plain = 'emails/plain/crwc-welcome-email.php';
 
