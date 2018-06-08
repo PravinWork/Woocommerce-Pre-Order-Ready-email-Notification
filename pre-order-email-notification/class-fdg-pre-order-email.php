@@ -1,6 +1,5 @@
 <?php
 //class-crwc-welcome-email.php
-
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
@@ -15,9 +14,11 @@ class CRWC_Welcome_Email extends WC_Email {
 	 * Set email defaults
 	 */
 	public function __construct() {
+		//die('Pravd-1');
 
 		// Unique ID for custom email
-		$this->id = 'crwc_welcome_email';
+		//$this->id = 'crwc_welcome_email';
+		$this->id = 'fdg_pre_order_email';
 
 		// Is a customer email
 		$this->customer_email = true;
@@ -29,8 +30,8 @@ class CRWC_Welcome_Email extends WC_Email {
 		$this->description = __( 'Pre-Order Ready email is sent when an Pre-order item is ready and available to dispatch.', 'woocommerce' );
 
 		// Default heading and subject lines in WooCommerce email settings
-		$this->subject = apply_filters( 'crwc_welcome_email_default_subject', __( 'Your Pre-Order is Ready', 'woocommerce' ) );
-		$this->heading = apply_filters( 'crwc_welcome_email_default_heading', __( 'Your Pre-Order is Ready', 'woocommerce' ) );
+		$this->subject = apply_filters( 'fdg_pre_order_email_default_subject', __( 'Your Pre-Order is Ready', 'woocommerce' ) );
+		$this->heading = apply_filters( 'crwc_pre_order_email_default_heading', __( 'Your Pre-Order is Ready', 'woocommerce' ) );
 		
 		// these define the locations of the templates that this email should use, we'll just use the new order template since this email is similar
 		$upload_dir = wp_upload_dir();
@@ -38,8 +39,8 @@ class CRWC_Welcome_Email extends WC_Email {
 		//DG_WPOEN_PLUGIN_DIR
 		//$this->template_base  = $upload_dir['basedir'] . '/crwc-custom-emails/';	// Fix the template base lookup for use on admin screen template path display
 		$this->template_base  = FDG_WPOEN_PLUGIN_DIR ;
-		$this->template_html  = 'emails/crwc-welcome-email.php';
-		$this->template_plain = 'emails/plain/crwc-welcome-email.php';
+		$this->template_html  = 'emails/fdg-pre-order-email.php';
+		$this->template_plain = 'emails/plain/fdg-pre-order-email.php';
 
 		// Trigger email when payment is complete
 		//add_action( 'woocommerce_payment_complete', array( $this, 'trigger' ) );
@@ -49,6 +50,8 @@ class CRWC_Welcome_Email extends WC_Email {
 		//add_action( 'woocommerce_order_status_failed_to_completed', array( $this, 'trigger' ) );
 		//add_action( 'woocommerce_order_status_pending_to_processing', array( $this, 'trigger' ) );
 		
+		add_action( 'woocommerce_order_action_fdg_pre_order_ready', array( $this, 'trigger' ) ,10,1);
+		add_action('woocommerce_order_status_fdg_pre_order_ready', array( $this, 'trigger' ),10,1);
 		add_action( 'woocommerce_pre_order_ready_mail_send', array( $this, 'trigger' ) );
 
 		// Call parent constructor to load any other defaults not explicity defined here
@@ -63,13 +66,14 @@ class CRWC_Welcome_Email extends WC_Email {
 	 * @param int $order_id
 	 */
 	public function trigger( $order_id ) {
+		//die('Pravd');
 
 		// Bail if no order ID is present
 		if ( ! $order_id )
 			return;
 		
 		// Send welcome email only once and not on every order status change		
-		if ( ! get_post_meta( $order_id, '_crwc_welcome_email_sent', true ) ) {
+		if ( ! get_post_meta( $order_id, '_fdg_pre_order_email_sent', true ) ) {
 			
 			// setup order object
 			$this->object = new WC_Order( $order_id );
@@ -108,7 +112,7 @@ class CRWC_Welcome_Email extends WC_Email {
 			$this->object->add_order_note( sprintf( __( '%s email sent to the customer.', 'woocommerce' ), $this->title ) );
 
 			// Set order meta to indicate that the welcome email was sent
-			update_post_meta( $this->object->id, '_crwc_welcome_email_sent', 1 );
+			update_post_meta( $this->object->id, '_fdg_pre_order_email_sent', 1 );
 			
 		}
 		
