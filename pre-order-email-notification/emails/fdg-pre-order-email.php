@@ -17,16 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-<p><?php _e( 'Thank you for your purchase of Online training course. Your account has been successfully created over the Online Training Program portal.', 'woocommerce' ); ?></p>
+<p><?php _e( 'The product you order is now available. Your order id is #'.$order->ID.' and find below for remaining total outstanding amount.', 'woocommerce' ); ?></p>
 
-<p><?php _e( 'Use the following credentials to login to the portal:', 'woocommerce' ); ?></p>
+<p><?php _e( 'Use the link below to pay outstanding amount', 'woocommerce' ); ?></p>
 
-<p>
-	<strong><?php __( 'Login URL: ', 'woocommerce' ) ?></strong><?php _e( 'https://example.com' ); ?><br />
-	<strong><?php __( 'Username: ', 'woocommerce' ) ?></strong><?php echo make_clickable( esc_attr( $order->billing_email ) ); ?><br />
-</p>
-
-<p><?php _e( 'Below are the order details for your reference.' ) ?></p>
+<p><?php _e( 'Below are the order details for your reference.', 'woocommerce' ) ?></p>
 
 <?php
 /**
