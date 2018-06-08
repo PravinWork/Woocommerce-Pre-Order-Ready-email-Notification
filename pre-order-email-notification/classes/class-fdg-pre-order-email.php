@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  * @extends \WC_Email
  */
 
-class CRWC_Welcome_Email extends WC_Email {
+class FDG_PreOrder_Email extends WC_Email {
 	
 	/**
 	 * Set email defaults
@@ -52,7 +52,11 @@ class CRWC_Welcome_Email extends WC_Email {
 		
 		add_action( 'woocommerce_order_action_fdg_pre_order_ready', array( $this, 'trigger' ) ,10,1);
 		add_action('woocommerce_order_status_fdg_pre_order_ready', array( $this, 'trigger' ),10,1);
-		add_action( 'woocommerce_pre_order_ready_mail_send', array( $this, 'trigger' ) );
+		add_action( 'woocommerce_pre_order_ready_mail_send', array( $this, 'trigger' ),10,1 );
+
+		add_action( 'woocommerce_order_status_pending_to_fdg_pre_order_ready_notification', array( $this, 'trigger' ), 10, 2 );
+		add_action( 'woocommerce_order_status_on-hold_to_fdg_pre_order_ready_notification', array( $this, 'trigger' ), 10, 2 );
+		add_action( 'woocommerce_order_status_processing_to_fdg_pre_order_ready_notification', array( $this, 'trigger' ), 10, 2 );
 
 		// Call parent constructor to load any other defaults not explicity defined here
 		parent::__construct();
@@ -66,7 +70,7 @@ class CRWC_Welcome_Email extends WC_Email {
 	 * @param int $order_id
 	 */
 	public function trigger( $order_id ) {
-		//die('Pravd');
+		//die('Trigger Order:'.$order_id );
 
 		// Bail if no order ID is present
 		if ( ! $order_id )
@@ -126,7 +130,7 @@ class CRWC_Welcome_Email extends WC_Email {
 	public function get_content_html() {
 		return wc_get_template_html( $this->template_html, array(
 			'order'					=> $this->object,
-			'email_heading'			=> $this->email_heading( $this->course_info['program'] ),
+			'email_heading'			=> $this->email_heading(),
 			'sent_to_admin'			=> false,
 			'plain_text'			=> false,
 			'email'					=> $this
@@ -142,13 +146,16 @@ class CRWC_Welcome_Email extends WC_Email {
 	public function get_content_plain() {
 		return wc_get_template_html( $this->template_plain, array(
 			'order'					=> $this->object,
-			'email_heading'			=> $this->email_heading( $this->course_info['program'] ),
+			'email_heading'			=> $this->email_heading(),
 			'sent_to_admin'			=> false,
 			'plain_text'			=> true,
 			'email'					=> $this
 		) );
 	}
 
+	function email_heading(){
+		return $this->heading;
+	}
 
 	/**
 	 * Initialize settings form fields
